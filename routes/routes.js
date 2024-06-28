@@ -1,9 +1,12 @@
 import { Router } from "express";
 import auth from "./auth.routes.js";
+import test from "./test.routes.js";
 
 const router = Router();
 
+// ** routes
 router.use("/auth", auth);
+router.use("/test", test);
 
 // ** root route
 router.get("/", (req, res) => {
@@ -14,10 +17,10 @@ router.get("/", (req, res) => {
             "POST /auth/signup": "User registration",
             "POST /auth/signin": "User login",
             "GET /auth/logout": "User logout",
-            "GET /getHistory": "Get user typing history",
-            "POST /saveHistory": "Save user typing history",
-            "GET /getLeaderboard": "Get leaderboard",
-            "GET /getStats": "Get user stats",
+            "GET /test/getHistory": "Get user typing history",
+            "POST /test/saveHistory": "Save user typing history",
+            "GET /test/getLeaderboard": "Get leaderboard",
+            "GET /test/getStats": "Get user stats",
         },
     });
 });

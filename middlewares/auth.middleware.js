@@ -13,6 +13,7 @@ const isAuth = async (req, res, next) => {
 
         // ** user verification
         const user = jwt.verify(token, process.env.JWT_SECRET);
+
         const userFromDB = await User.findById(user.id);
         if (!userFromDB) {
             throw new Error("User not found");
@@ -20,6 +21,8 @@ const isAuth = async (req, res, next) => {
         if (userFromDB.token !== token) {
             throw new Error("Invalid token");
         }
+
+        // ** add user to request
         req.userId = user.id;
         next();
     } catch (error) {
