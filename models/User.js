@@ -24,10 +24,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
-});
+},  { timestamps: true });
 
 // ** salt addition before saving the user
-userSchema.pre("save", addSalt());
+userSchema.pre("save", (next) => {
+    addSalt(this, next);
+});
 
 const User = mongoose.model("User", userSchema);
 
