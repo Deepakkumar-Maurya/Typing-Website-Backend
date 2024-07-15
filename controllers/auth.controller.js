@@ -22,7 +22,9 @@ const signup = async (req, res) => {
     // ** check if user already exists
     const user = await User.findOne({ email: email });
     if (user) {
-      throw new Error("User already exists");
+      const error = new Error("User already exists");
+      error.statusCode = 409;
+      throw error;
     }
 
     // ** create a new user
@@ -39,7 +41,8 @@ const signup = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    return res.status(400).json({
+    const statusCode = error.statusCode || 400;
+    return res.status(statusCode).json({
       success: false,
       message: "Error creating new user",
       error: error.message,
@@ -62,13 +65,17 @@ const signin = async (req, res) => {
     // ** check if user exists
     const user = await User.findOne({ email: email });
     if (!user) {
-      throw new Error("No such user found");
+      const error = new Error("No such user found");
+      error.statusCode = 404;
+      throw error;
     }
 
     // ** match password
     const isMatch = matchPassword(user, password);
     if (!isMatch) {
-      throw new Error("Invalid password");
+      const error = new Error("Invalid password");
+      error.statusCode = 401;
+      throw error;
     }
 
     // ** generate a token
@@ -84,7 +91,8 @@ const signin = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    return res.status(400).json({
+    const statusCode = error.statusCode || 400;
+    return res.status(statusCode).json({
       success: false,
       message: "Error while signing user",
       error: error.message,

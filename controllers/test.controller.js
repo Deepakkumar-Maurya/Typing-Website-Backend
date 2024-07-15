@@ -17,7 +17,9 @@ const getTestHistory = async (req, res) => {
 
         // ** check if test history exists
         if (!testHistory) {
-            throw new Error("No test history found");
+            const error = new Error("No test history found");
+            error.statusCode = 404;
+            throw error;
         }
 
         return res.status(200).json({
@@ -27,7 +29,8 @@ const getTestHistory = async (req, res) => {
         });
     } catch (error) {
         console.log(error.message);
-        return res.status(400).json({
+        const statusCode = error.statusCode || 400;
+        return res.status(statusCode).json({
             success: false,
             message: "Error while getting test history",
             error: error.message,
@@ -63,7 +66,8 @@ const saveHistory = async (req, res) => {
         });
     } catch (error) {
         console.log(error.message);
-        return res.status(400).json({
+        const statusCode = error.statusCode || 400;
+        return res.status(statusCode).json({
             success: false,
             message: "Error while adding test",
             error: error.message,
@@ -124,7 +128,8 @@ const getLeaderboard = async (req, res) => {
         });
     } catch (error) {
         console.log(error.message);
-        return res.status(400).json({
+        const statusCode = error.statusCode || 400;
+        return res.status(statusCode).json({
             success: false,
             message: "Error while getting leaderboard",
             error: error.message,
@@ -143,7 +148,9 @@ const getStats = async (req, res) => {
 
         // ** check if test history exists
         if (!testHistory) {
-            throw new Error("No test history found");
+            const error = new Error("No test history found");
+            error.statusCode = 404;
+            throw error;
         }
 
         // ** calculate average WPM, CPM, accuracy, mistakes, backspace
@@ -162,7 +169,8 @@ const getStats = async (req, res) => {
         });
     } catch (error) {
         console.log(error.message);
-        return res.status(400).json({
+        const statusCode = error.statusCode || 400;
+        return res.status(statusCode).json({
             success: false,
             message: "Error while getting stats",
             error: error.message,

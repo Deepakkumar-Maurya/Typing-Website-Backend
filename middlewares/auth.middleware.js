@@ -7,7 +7,9 @@ const isAuth = async (req, res, next) => {
 
         //** header check
         if (!authHeader || authHeader == null || authHeader === "") {
-            throw new Error("No token provided");
+            const error = new Error("No token provided");
+            error.statusCode = 401;
+            throw error;
         }
         const token = authHeader?.split(" ")[1];
 
@@ -16,10 +18,14 @@ const isAuth = async (req, res, next) => {
 
         const userFromDB = await User.findById(user.id);
         if (!userFromDB) {
-            throw new Error("User not found");
+            const error = new Error("User not found");
+            error.statusCode = 404;
+            throw error;
         }
         if (userFromDB.token !== token) {
-            throw new Error("Invalid token");
+            const error = new Error("Invalid token");
+            error.statusCode = 401;
+            throw error;
         }
 
         // ** add user to request
@@ -27,7 +33,8 @@ const isAuth = async (req, res, next) => {
         next();
     } catch (error) {
         console.log(error.message);
-        return res.status(400).json({
+        const statusCode = error.statusCode || 400;
+        return res.status(statusCode).json({
             success: false,
             message: "Error in authentication",
             error: error.message,
