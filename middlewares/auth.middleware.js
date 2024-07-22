@@ -19,7 +19,7 @@ const isAuth = async (req, res, next) => {
         const userFromDB = await User.findById(user.id);
         if (!userFromDB) {
             const error = new Error("User not found");
-            error.statusCode = 404;
+            error.statusCode = 401;
             throw error;
         }
         if (userFromDB.token !== token) {
@@ -33,7 +33,7 @@ const isAuth = async (req, res, next) => {
         next();
     } catch (error) {
         console.log(error.message);
-        const statusCode = error.statusCode || 400;
+        const statusCode = error.statusCode || 500;
         return res.status(statusCode).json({
             success: false,
             message: "Error in authentication",
